@@ -17,6 +17,12 @@ app.get('/livros', (req, res) => {
     res.status(200).json(livros);
 })
 
+app.get('/livros/:id', (req, res) => {
+    const id = req.params.id;
+    const livro = buscaLivro(id);
+    res.status(200).json(livros[livro]);
+})
+
 app.post('/livros', (req, res) => {
     const livro = req.body;
     livros.push(livro);
@@ -30,6 +36,7 @@ app.put('/livros/:id', (req, res) => {
     livros[livro].autor = req.body.autor;
     res.status(200).json(livro);
 })
+
 
 const buscaLivro = (id) => {
     return livros.findIndex(l => l.id === Number(id));
