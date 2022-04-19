@@ -18,7 +18,7 @@ app.get('/livros', (req, res) => {
 })
 
 app.get('/livros/:id', (req, res) => {
-    const id = req.params.id;
+    const { id } = req.params;
     const livro = buscaLivro(id);
     res.status(200).json(livros[livro]);
 })
@@ -30,13 +30,19 @@ app.post('/livros', (req, res) => {
 })
 
 app.put('/livros/:id', (req, res) => {
-    const id = req.params.id;
+    const { id } = req.params;
     const livro = buscaLivro(id);
     livros[livro].nome = req.body.nome;
     livros[livro].autor = req.body.autor;
     res.status(200).json(livro);
 })
 
+app.delete('/livros/:id', (req, res) => {
+    const { id } = req.params;
+    const livro = buscaLivro(id);
+    livros.splice(livro, 1);
+    res.status(200).send(`Livro ${id} deletado`);
+})
 
 const buscaLivro = (id) => {
     return livros.findIndex(l => l.id === Number(id));
