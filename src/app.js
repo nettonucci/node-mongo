@@ -1,11 +1,14 @@
 import express from 'express';
+import 'dotenv/config';
+import db from './config/dbConnect.js';
+import livros from './models/Livro.js';
+
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', () => {
+    console.log('[Mongo DB] Connected');
+})
 
 const app = express();
-
-const livros = [
-    {id: 1, nome: 'O Senhor dos Anéis', autor: 'J.R.R. Tolkien'},
-    {id: 2, nome: 'O Hobbit', autor: 'J.R.R. Tolkien'},
-]
 
 app.use(express.json());
 
@@ -14,7 +17,9 @@ app.get('/', (req, res) => {
 })
 
 app.get('/livros', (req, res) => {
-    res.status(200).json(livros);
+    livros.find((err, livros) => {
+        res.status(200).json(livros);
+    })
 })
 
 app.get('/livros/:id', (req, res) => {
