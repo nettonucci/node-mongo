@@ -3,14 +3,18 @@ import livros from "../models/Livro.js";
 class LivroController {
 
     static listarLivros = (req, res) => {
-        livros.find((err, livros) => {
-            res.status(200).json(livros);
+        livros.find()
+            .populate('autor')
+            .exec((err, livros) => {
+                res.status(200).json(livros);
         })
     }
 
     static buscarLivro = (req, res) => {
         const { id } = req.params;
-        livros.findById(id, (err, livro) => {
+        livros.findById(id)
+            .populate('autor')
+            .exec((err, livro) => {
             if (err) {
                 res.status(500).json({message: err.message});
             } else {
@@ -50,6 +54,17 @@ class LivroController {
                 res.status(500).json({message: err.message});
             } else {
                 res.status(200).json({message: "Livro excluído com sucesso!"});
+            }
+        })
+    }
+
+    static listarLivroPorEditora = (req, res) => {
+        const { editora } = req.query;
+        livros.find({editora: editora}, {}, (err, livros) => {
+            if (err) {
+                res.status(500).json({message: err.message});
+            } else {
+                res.status(200).json(livros);
             }
         })
     }
